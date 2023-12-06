@@ -3,6 +3,7 @@ public class Customer {
     float balance;
 
     public Customer() {
+        this.balance = 0.0f;
     }
 
     public Customer(String customerName, String customerEmail, String customerAddress, String customerGender, String customerAadhar, String customerPhone, float balance) {
