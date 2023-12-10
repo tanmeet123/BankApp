@@ -1,36 +1,46 @@
-public class SBI implements RBI{
-    float balance = 1000.0f, ROI = 2;
-    int counter=0;
-    Customer customer = new Customer();
-    public SBI(){
+public class SBI implements RBI {
+    float balance = 3000.0f, ROI = 2;
+    int counter = 0;
+    Customer customer;
+
+    public SBI() {
         System.out.println("Welcome to SBI");
+        customer = new Customer();
     }
+
+     public SBI(Customer customer) {
+        System.out.println("Welcome to SBI");
+      this.customer = customer;
+    }
+
     public void depositMoney(float amount) {
         customer.balance += amount;
         System.out.println("Customer Balance in account: " + customer.balance);
     }
-    public void withdrawMoney(float amount){
+
+    public void withdrawMoney(float amount) {
         counter++;
         //float money=0.0f;
-        if (counter>3){
-            amount+= (float) ((0.01f*amount));
+        if (counter > 3) {
+            amount += (float) ((0.01f * amount));
         }
-        if (customer.balance - amount < this.balance){
+        if (customer.balance - amount < this.balance) {
             System.out.println("Minimum customer balance reached: Withdrawal not possible.");
-        }else {
+        } else {
             customer.balance -= amount;
         }
         System.out.println("Customer Balance in account: " + customer.balance);
     }
+
     public void openFD(float amount, int years) {
-        amount += (amount * ROI * years/100);
-        customer.balance+=amount;
+        amount += (amount * ROI * years / 100);
+        this.customer.balance += amount;
         System.out.println("Customer total profit: " + amount);
         System.out.println("Customer Balance in account: " + customer.balance);
     }
-    public void applyLoan(int loanType, float amount, int years) {
 
-        switch(loanType){
+    public void applyLoan(int loanType, float amount, int years) {
+        switch (loanType) {
             case 1:
                 ROI = 3;
                 break;
@@ -38,10 +48,10 @@ public class SBI implements RBI{
                 ROI = 1;
                 break;
             case 3:
-                ROI = 5;
+                ROI = 8;
                 break;
             case 4:
-                ROI = 7;
+                ROI = 6;
                 break;
             default:
                 ROI = 2;
@@ -73,13 +83,14 @@ public class SBI implements RBI{
 
     public void applyCreditCard() {
         //float ROI = 1;
-        if (customer.balance <= this.balance*2){
+        if (this.customer.balance > this.balance * 2) {
             System.out.println("Credit-Card can be applied.");
-        }else{
+        } else {
             System.out.println("Credit-Card cannot be applied: Not Enough customer balance.");
         }
     }
+
     public void getBalance() {
-        System.out.println("Customer Balance in account: " +customer.balance);
+        System.out.println("Customer Balance in account: " + this.customer.balance);
     }
 }

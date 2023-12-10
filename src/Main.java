@@ -1,8 +1,12 @@
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
-public class Main {
+public class Main extends Thread { // m is main obj so m.start and @override run() method and put all code in it from main function
 
     BufferedReader buff;
     InputStreamReader isr;
@@ -14,129 +18,228 @@ public class Main {
             buff = new BufferedReader(isr);
     }
 
-    int selectedBank, selectedOperation;
+    Integer selectedBank, selectedOperation;
     float amount;
     int years, loanType;
 
     public static void main(String[] args) {
         Main obj = new Main();
+        obj.start();
+    }
+
+    Customer hasAadhar(List<Customer> customers, String aadhar) {
+
+        for (Customer customer : customers) {
+            if (customer.customerAadhar.equals(aadhar)) {
+                return customer;
+            }
+        }
+        return new Customer();
+    }
+
+    RBI insICICI(List<RBI> banks) {
+        for (RBI bank : banks) {
+            if (bank instanceof ICICI)
+                return bank;
+        }
+        return new ICICI();
+    }
+
+    RBI insHDFC(List<RBI> banks) {
+        for (RBI bank : banks) {
+            if (bank instanceof HDFC)
+                return bank;
+        }
+        return new HDFC();
+    }
+
+    @Override
+    public void run() {
+
+        Main obj = new Main();
         RBI bank = null;
         String chooseBank;
+        String newCustomer = null;
+        Map<Integer, List<Customer>> Bank = new HashMap<>();
+        Map<String, List<Integer>> customerBank = new HashMap<>();
+        List<RBI> bankList = new ArrayList<>();
         do {
+            Customer customer = new Customer();
 
-            System.out.println("Welcome to IBS\nPlease select your bank\n1. ICICI\n2. HDFC\n3. SBI\n4. AXIS");
+            String currAadhar = "", name = "", email = "", phone = "", address = "";
+            System.out.println("enter aadhar, name, email, phone, address");
+
             try {
-                obj.selectedBank = Integer.parseInt(obj.buff.readLine());
+                currAadhar = obj.buff.readLine();
+                customer.setCustomerAadhar(currAadhar);
+                customer.setCustomerName(name);
+                customer.setCustomerEmail(email);
+                customer.setCustomerPhone(phone);
+                customer.setCustomerAddress(address);
             } catch (IOException e) {
                 e.printStackTrace();
             }
-            System.out.println("Customer Selected " + obj.selectedBank);
-            switch(obj.selectedBank){
-                case 1:
-                    bank = new ICICI();
-                    break;
-                case 2:
-                    bank = new HDFC();
-                    break;
-                case 3:
-                    bank = new SBI();
-                    break;
-                case 4:
-                    bank = new AXIS();
-                    break;
-                default:
-                    System.out.println("Invalid Choice");
-                    break;
-            }
-            String chooseOperation;
             do {
-                System.out.println("Select your choice\n1. Deposit\n2. Withdrawal\n3. OpenFD\n4. Apply Loan\n5. Apply CC\n6. Check Balance");
+
+                System.out.println("Welcome to IBS\nPlease select your bank\n1. ICICI\n2. HDFC");
                 try {
-                    obj.selectedOperation = Integer.parseInt(obj.buff.readLine());
+                    obj.selectedBank = Integer.parseInt(obj.buff.readLine());
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
-                System.out.println("Customer Selected " + obj.selectedOperation);
-                switch (obj.selectedOperation) {
+                System.out.println("Customer Selected " + obj.selectedBank);
+                if (Bank.containsKey(obj.selectedBank)) {
+                    Bank.get(obj.selectedBank).add(customer);
+                } else {
+                    ArrayList<Customer> customers = new ArrayList<>();
+                    customers.add(customer);
+                    Bank.put(obj.selectedBank, customers);
+                }
+                switch (obj.selectedBank) {
                     case 1:
-                        System.out.print("Enter the amount: ");
-                        try {
-                            // bnk acc details
-                            obj.amount = Float.parseFloat(obj.buff.readLine());
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
-                        bank.depositMoney(obj.amount);
+                        if (bankList.isEmpty()) {
+                            bank = new ICICI(customer);
+                            bankList.add(bank);
+                        } else bank = obj.insICICI(bankList);
                         break;
                     case 2:
-                        System.out.print("Enter the amount: ");
-                        try {
-                            obj.amount = Float.parseFloat(obj.buff.readLine());
-                        } catch (IOException e) {
-                            e.printStackTrace();
+                        if (bankList.isEmpty()) {
+                            bank = new HDFC(customer);
+                            bankList.add(bank);
+                        } else {
+                            bank = obj.insHDFC(bankList);
                         }
-                        bank.withdrawMoney(obj.amount);
-                        break;
-                    case 3:
-                        System.out.print("Enter the amount: ");
-                        try {
-                            obj.amount = Float.parseFloat(obj.buff.readLine());
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
-                        System.out.print("Enter duration in years: ");
-                        try {
-                            obj.years = Integer.parseInt(obj.buff.readLine());
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
-                        bank.openFD(obj.amount, obj.years);
-                        break;
-                    case 4:
-                        System.out.print("Enter the amount: ");
-                        try {
-                            obj.amount = Float.parseFloat(obj.buff.readLine());
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
-                        System.out.print("Enter duration in years: ");
-                        try {
-                            obj.years = Integer.parseInt(obj.buff.readLine());
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
-                        System.out.println("Select type of Loan\n1. Home\n2. Education\n3. Personal\n4. Car ");
-                        try {
-                            obj.loanType = Integer.parseInt(obj.buff.readLine());
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
-                        bank.applyLoan(obj.loanType, obj.amount, obj.years);
-                        break;
-                    case 5:
-                        bank.applyCreditCard();
-                        break;
-                    case 6:
-                        bank.getBalance();
-                        break;
                     default:
                         System.out.println("Invalid Choice");
                         break;
                 }
-                System.out.println("Enter 'y' to choose operation again:");
+
+                String chooseOperation;
+                do {
+                    System.out.println("Select your choice\n1. Deposit\n2. Withdrawal\n3. OpenFD\n4. Apply Loan\n5. Apply CC\n6. Check Balance");
+                    try {
+                        obj.selectedOperation = Integer.parseInt(obj.buff.readLine());
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    System.out.println("Customer Selected " + obj.selectedOperation);
+                    switch (obj.selectedOperation) {
+                        case 1:
+                            System.out.print("Enter the amount: ");
+                            try {
+                                obj.amount = Float.parseFloat(obj.buff.readLine());
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                            bank.depositMoney(obj.amount);
+                            break;
+                        case 2:
+                            System.out.print("Enter the amount: ");
+                            try {
+                                obj.amount = Float.parseFloat(obj.buff.readLine());
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                            bank.withdrawMoney(obj.amount);
+                            break;
+                        case 3:
+                            System.out.print("Enter the amount: ");
+                            try {
+                                obj.amount = Float.parseFloat(obj.buff.readLine());
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                            System.out.print("Enter duration in years: ");
+                            try {
+                                obj.years = Integer.parseInt(obj.buff.readLine());
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                            bank.openFD(obj.amount, obj.years);
+                            break;
+                        case 4:
+                            System.out.print("Enter the amount: ");
+                            try {
+                                obj.amount = Float.parseFloat(obj.buff.readLine());
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                            System.out.print("Enter duration in years: ");
+                            try {
+                                obj.years = Integer.parseInt(obj.buff.readLine());
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                            System.out.println("Select type of Loan\n1. Home\n2. Education\n3. Personal\n4. Car ");
+                            try {
+                                obj.loanType = Integer.parseInt(obj.buff.readLine());
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                            bank.applyLoan(obj.loanType, obj.amount, obj.years);
+                            break;
+                        case 5:
+                            bank.applyCreditCard();
+                            break;
+                        case 6:
+                            bank.getBalance();
+                            break;
+                        default:
+                            System.out.println("Invalid Choice");
+                            break;
+                    }
+
+                    if (customerBank.containsKey(customer.customerAadhar)) {
+                        customerBank.get(customer.customerAadhar).add(obj.selectedBank);
+                    } else {
+                        ArrayList<Integer> newBankList = new ArrayList<>();
+                        newBankList.add(obj.selectedBank);
+                        customerBank.put(customer.customerAadhar, newBankList);
+                    }
+
+                    System.out.println("Enter 'N' to choose operation again:");
+                    try {
+                        chooseOperation = obj.buff.readLine();
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
+
+                } while (chooseOperation.equals("N"));
+
+                System.out.println("Enter 'N' to choose Bank again:");
                 try {
-                    chooseOperation = obj.buff.readLine();
+                    chooseBank = obj.buff.readLine();
                 } catch (IOException e) {
                     throw new RuntimeException(e);
                 }
 
-            } while (chooseOperation.equals("y"));
-            System.out.println("Enter 'y' to choose Bank again:");
+            } while (chooseBank.equals("N"));
+
+            //System.out.println("Enter 'y' to exit and 'n' to check status:");
+            System.out.println("Enter choice:\n\t'y' to continue and check status\n\t'n' to exit:");
             try {
-                chooseBank = obj.buff.readLine();
+                newCustomer = obj.buff.readLine();
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
-        } while (chooseBank.equals("y"));
+
+
+            //System.out.println("Number of banks with customer " + customerBank.get(aadharNoOfBank));
+            for (String aadhar: customerBank.keySet()) {
+                String key = aadhar;
+                String value = customerBank.get(aadhar).toString();
+                System.out.println(key + " " + value);
+            }
+            System.out.println("Enter the bank code to check no. of customers");
+            int bankNoOfCustomer = 0;
+            try {
+                bankNoOfCustomer = Integer.parseInt(obj.buff.readLine());
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            System.out.println("No. of customers associated are " + Bank.get(bankNoOfCustomer).size());
+
+        } while (!newCustomer.equals("y"));
     }
 }

@@ -1,7 +1,9 @@
+import java.util.HashMap;
+import java.util.Map;
+
 public interface RBI {
     float balance = 1000.0f, ROI = 1;
     int counter = 0;
-    Customer customer = new Customer();
 
     public void depositMoney(float amount);
 

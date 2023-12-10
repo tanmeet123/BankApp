@@ -1,40 +1,66 @@
+import java.util.HashMap;
+import java.util.Map;
+
 public class ICICI implements RBI {
-    float balance = 3000.0f, ROI = 2;
+    float balance = 1000.0f, ROI = 2, customerBalance;
     int counter = 0;
-    Customer customer = new Customer();
+    Customer customer;
+    Map<String, Float> aadharToBalance = new HashMap<>();
 
     public ICICI() {
         System.out.println("Welcome to ICICI");
+        customer = new Customer();
+        this.customerBalance = 0f;
+        aadharToBalance.put(customer.customerAadhar, this.customerBalance);
+    }
+
+    public ICICI(Customer customer) {
+        System.out.println("Welcome to ICICI");
+        if (aadharToBalance.containsKey(customer.customerAadhar))
+            this.customerBalance = aadharToBalance.get(customer.customerAadhar);
+        else {
+            this.customerBalance = 0f;
+            aadharToBalance.put(customer.customerAadhar, this.customerBalance);
+        }
+
+        this.customer = customer;
     }
 
     public void depositMoney(float amount) {
-        customer.balance += amount;
-        System.out.println("Customer Balance in account: " + customer.balance);
+        this.customerBalance += amount;
+        //customer.balance = this.customerBalance;
+        System.out.println("Customer Balance in account: " + this.customerBalance);
+        aadharToBalance.put(customer.customerAadhar, this.customerBalance);
     }
 
     public void withdrawMoney(float amount) {
         counter++;
-        //float money=0.0f;
+
         if (counter > 3) {
             amount += (float) ((0.01f * amount));
         }
-        if (customer.balance - amount < this.balance) {
+        if (this.customerBalance - amount < this.balance) {
             System.out.println("Minimum customer balance reached: Withdrawal not possible.");
         } else {
             customer.balance -= amount;
         }
-        System.out.println("Customer Balance in account: " + customer.balance);
+        System.out.println("Customer Balance in account: " + this.customerBalance);
+        //customer.balance = this.customerBalance;
+        aadharToBalance.put(customer.customerAadhar, this.customerBalance);
     }
 
     public void openFD(float amount, int years) {
         amount += (amount * ROI * years / 100);
-        customer.balance += amount;
+        this.customerBalance += amount;
         System.out.println("Customer total profit: " + amount);
-        System.out.println("Customer Balance in account: " + customer.balance);
+        System.out.println("Customer Balance in account: " + this.customerBalance);
+        //customer.balance = this.customerBalance;
+        aadharToBalance.put(customer.customerAadhar, this.customerBalance);
     }
 
     public void applyLoan(int loanType, float amount, int years) {
-        switch(loanType){
+
+        switch (loanType) {
             case 1:
                 ROI = 3;
                 break;
@@ -42,15 +68,16 @@ public class ICICI implements RBI {
                 ROI = 1;
                 break;
             case 3:
-                ROI = 8;
+                ROI = 5;
                 break;
             case 4:
-                ROI = 6;
+                ROI = 7;
                 break;
             default:
                 ROI = 2;
                 break;
         }
+
         float interestPaid, principalPaid, newBalance;
         float monthlyInterestRate, monthlyPayment;
         int month;
@@ -72,18 +99,22 @@ public class ICICI implements RBI {
             // Update the balance
             amount = newBalance;
         }
-        customer.balance += amount;
+        this.customerBalance += amount;
+        //customer.balance = this.customerBalance;
+        aadharToBalance.put(customer.customerAadhar, this.customerBalance);
     }
 
     public void applyCreditCard() {
         //float ROI = 1;
-        if (customer.balance > this.balance*2){
+        if (this.customerBalance <= this.balance * 2) {
             System.out.println("Credit-Card can be applied.");
-        }else{
+        } else {
             System.out.println("Credit-Card cannot be applied: Not Enough customer balance.");
         }
+        aadharToBalance.put(customer.customerAadhar, this.customerBalance);
     }
+
     public void getBalance() {
-        System.out.println("Customer Balance in account: " +customer.balance);
+        System.out.println("Customer Balance in account: " + aadharToBalance.get(customer.customerAadhar));
     }
 }

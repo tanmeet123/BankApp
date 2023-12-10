@@ -1,12 +1,16 @@
 public class AXIS implements RBI {
-    float balance = 1500.0f, ROI = 2;
+    float balance = 1500.0f, ROI = 2,customerBalance;
     int counter = 0;
-    Customer customer = new Customer();
-
+    Customer customer;
     public AXIS() {
         System.out.println("Welcome to AXIS");
+        customer = new Customer();
+        //this.customerBalance = 0f;
     }
-
+    public AXIS(Customer customer) {
+        System.out.println("Welcome to AXIS");
+        this.customer = customer;
+    }
     public void depositMoney(float amount) {
         customer.balance += amount;
         System.out.println("Customer Balance in account: " + customer.balance);
