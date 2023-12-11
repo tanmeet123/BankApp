@@ -67,18 +67,47 @@ public class Main extends Thread { // m is main obj so m.start and @override run
             Customer customer = new Customer();
 
             String currAadhar = "", name = "", email = "", phone = "", address = "";
-            System.out.println("enter aadhar, name, email, phone, address");
-
+            System.out.print("enter aadhar: ");
             try {
                 currAadhar = obj.buff.readLine();
-                customer.setCustomerAadhar(currAadhar);
-                customer.setCustomerName(name);
-                customer.setCustomerEmail(email);
-                customer.setCustomerPhone(phone);
-                customer.setCustomerAddress(address);
+
             } catch (IOException e) {
                 e.printStackTrace();
             }
+            System.out.print("enter name: ");
+            try {
+                name = obj.buff.readLine();
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            System.out.print("enter email: ");
+            try {
+                email = obj.buff.readLine();
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            System.out.print("enter phone number: ");
+            try {
+                phone = obj.buff.readLine();
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            System.out.print("enter address: ");
+            try {
+                address = obj.buff.readLine();
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            System.out.println();
+            customer.setCustomerAadhar(currAadhar);
+            customer.setCustomerName(name);
+            customer.setCustomerEmail(email);
+            customer.setCustomerPhone(phone);
+            customer.setCustomerAddress(address);
             do {
 
                 System.out.println("Welcome to IBS\nPlease select your bank\n1. ICICI\n2. HDFC");
@@ -215,7 +244,6 @@ public class Main extends Thread { // m is main obj so m.start and @override run
 
             } while (chooseBank.equals("N"));
 
-            //System.out.println("Enter 'y' to exit and 'n' to check status:");
             System.out.println("Enter choice:\n\t'y' to continue and check status\n\t'n' to exit:");
             try {
                 newCustomer = obj.buff.readLine();
@@ -223,8 +251,6 @@ public class Main extends Thread { // m is main obj so m.start and @override run
                 throw new RuntimeException(e);
             }
 
-
-            //System.out.println("Number of banks with customer " + customerBank.get(aadharNoOfBank));
             for (String aadhar: customerBank.keySet()) {
                 String key = aadhar;
                 String value = customerBank.get(aadhar).toString();
