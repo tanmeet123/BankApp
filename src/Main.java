@@ -250,11 +250,11 @@ public class Main extends Thread { // m is main obj so m.start and @override run
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
-
+            System.out.println("List attached to list of banks:- ");
             for (String aadhar: customerBank.keySet()) {
                 String key = aadhar;
                 String value = customerBank.get(aadhar).toString();
-                System.out.println(key + " " + value);
+                System.out.println("Aadhar: " + key + " - Banks: " + value);
             }
             System.out.println("Enter the bank code to check no. of customers");
             int bankNoOfCustomer = 0;
