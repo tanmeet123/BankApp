@@ -37,7 +37,7 @@ public class ICICI implements RBI {
         counter++;
 
         if (counter > 3) {
-            amount += (float) ((0.01f * amount));
+            amount += (0.01f * amount);
         }
         if (this.customerBalance - amount < this.balance) {
             System.out.println("Minimum customer balance reached: Withdrawal not possible.");
@@ -83,7 +83,6 @@ public class ICICI implements RBI {
         int month;
         int numMonths = years * 12;
 
-        // Output monthly payment and total payment
         monthlyInterestRate = ROI / 1200;
         monthlyPayment = (float) (amount * monthlyInterestRate / (1 - 1 / Math.pow(1 + monthlyInterestRate, years * 12)));
         System.out.format("Monthly Payment: %8.2f%n", monthlyPayment);

@@ -1,5 +1,3 @@
-import java.util.HashMap;
-import java.util.Map;
 
 public interface RBI {
     float balance = 1000.0f, ROI = 1;
