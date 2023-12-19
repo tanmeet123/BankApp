@@ -1,21 +1,26 @@
+import java.util.logging.Level;
+import java.util.logging.LogManager;
+import java.util.logging.Logger;
+
 public class SBI implements RBI {
     float balance = 3000.0f, ROI = 2;
     int counter = 0;
     Customer customer;
-
+    LogManager logManager = LogManager.getLogManager();
+    Logger logger = logManager.getLogger(Logger.GLOBAL_LOGGER_NAME);
     public SBI() {
-        System.out.println("Welcome to SBI");
+        logger.log(Level.INFO,"Welcome to master.SBI");
         customer = new Customer();
     }
 
      public SBI(Customer customer) {
-        System.out.println("Welcome to SBI");
+        logger.log(Level.INFO,"Welcome to master.SBI");
       this.customer = customer;
     }
 
     public void depositMoney(float amount) {
         customer.balance += amount;
-        System.out.println("Customer Balance in account: " + customer.balance);
+        logger.log(Level.INFO,"master.Customer Balance in account: " + customer.balance);
     }
 
     public void withdrawMoney(float amount) {
@@ -25,18 +30,18 @@ public class SBI implements RBI {
             amount += (float) ((0.01f * amount));
         }
         if (customer.balance - amount < this.balance) {
-            System.out.println("Minimum customer balance reached: Withdrawal not possible.");
+            logger.log(Level.INFO,"Minimum customer balance reached: Withdrawal not possible.");
         } else {
             customer.balance -= amount;
         }
-        System.out.println("Customer Balance in account: " + customer.balance);
+        logger.log(Level.INFO,"master.Customer Balance in account: " + customer.balance);
     }
 
     public void openFD(float amount, int years) {
         amount += (amount * ROI * years / 100);
         this.customer.balance += amount;
-        System.out.println("Customer total profit: " + amount);
-        System.out.println("Customer Balance in account: " + customer.balance);
+        logger.log(Level.INFO,"master.Customer total profit: " + amount);
+        logger.log(Level.INFO,"master.Customer Balance in account: " + customer.balance);
     }
 
     public void applyLoan(int loanType, float amount, int years) {
@@ -84,13 +89,13 @@ public class SBI implements RBI {
     public void applyCreditCard() {
         //float ROI = 1;
         if (this.customer.balance > this.balance * 2) {
-            System.out.println("Credit-Card can be applied.");
+            logger.log(Level.INFO,"Credit-Card can be applied.");
         } else {
-            System.out.println("Credit-Card cannot be applied: Not Enough customer balance.");
+            logger.log(Level.INFO,"Credit-Card cannot be applied: Not Enough customer balance.");
         }
     }
 
     public void getBalance() {
-        System.out.println("Customer Balance in account: " + this.customer.balance);
+        logger.log(Level.INFO,"master.Customer Balance in account: " + this.customer.balance);
     }
 }

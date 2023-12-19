@@ -1,4 +1,3 @@
-
 public interface RBI {
     float balance = 1000.0f, ROI = 1;
     int counter = 0;
